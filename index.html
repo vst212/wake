@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>WAKE · 20 BNB 硬顶 · 卖满自动开池</title>
+<meta name="description" content="WAKE —— BNB Chain 社区自发铸造。20 BNB 硬顶，只有 200 个钱包能上车。卖满自动开池、LP 打进黑洞；24h 未满全额退款。合约无 owner、无增发、无暂停、无黑名单。" />
+<meta property="og:title" content="WAKE · Agent 没死，只是睡着了" />
+<meta property="og:description" content="20 BNB 硬顶 · 只有 200 个钱包能上车 · 卖满自动开池，LP 永久锁死 · 未满 24h 全额退款" />
+<meta name="theme-color" content="#060709" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23F0B90B'/%3E%3Cpath d='M16 6l3.4 6.6L26 16l-6.6 3.4L16 26l-3.4-6.6L6 16l6.6-3.4z' fill='%23060709'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="glow glow-top"></div>
+
+<!-- ============================= NAV ============================= -->
+<header class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top">
+      <span class="mark">◆</span>
+      <span class="brand-txt"><b>WAKE</b><i>BNB CHAIN</i></span>
+    </a>
+    <nav class="nav-links">
+      <a href="#letter">公开信</a>
+      <a href="#rules">规则</a>
+      <a href="#clean">合约</a>
+      <a href="#event">活动</a>
+      <a href="#invite">邀请</a>
+    </nav>
+    <button class="btn btn-ghost btn-sm" id="connectBtn" data-connect>连接钱包</button>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============================= HERO ============================= -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <div class="tag"><span class="dot"></span>社区自发铸造 · 与官方无隶属关系</div>
+      <h1>
+        没死。<br />
+        只是<span class="hl">睡着了</span>。
+      </h1>
+      <p class="lede">
+        2000 份，20 BNB 硬顶，每钱包最多 10 份 —— <b>最多只能有 200 个钱包上车。</b><br />
+        卖满，合约自己开池，LP 打进黑洞永久锁死；24 小时没卖满，任何人可开启退款，买家一分不少拿回去。
+      </p>
+
+      <div class="stat-strip">
+        <div class="stat"><span class="k">已售</span><span class="v"><b id="soldShares">—</b><i>/ 2000 份</i></span></div>
+        <div class="stat"><span class="k">已筹</span><span class="v"><b id="raised">—</b><i>BNB</i></span></div>
+        <div class="stat"><span class="k">剩余</span><span class="v"><b id="countdown">—</b><i id="countdownUnit">后结束</i></span></div>
+        <div class="stat"><span class="k">状态</span><span class="v"><b id="statusText" class="status-live">—</b></span></div>
+      </div>
+
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#buy">立即参与</a>
+        <a class="btn btn-ghost" href="#clean" target="_self">先看合约</a>
+      </div>
+      <p class="fine">链上数据每 15 秒自动刷新 · 全部状态直接读取 BSC 合约</p>
+    </div>
+
+    <!-- ---------- BUY CARD ---------- -->
+    <aside class="buy-card" id="buy">
+      <div class="buy-head">
+        <div>
+          <span class="kicker">MINT</span>
+          <h2>铸造 <span class="gold" id="brandSym">WAKE</span></h2>
+        </div>
+        <span class="pill" id="cardStatus">读取中</span>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress"><div class="bar" id="bar"></div>
+          <div class="ticks">
+            <i style="left:25%"></i><i style="left:50%"></i><i style="left:75%"></i>
+          </div>
+        </div>
+        <div class="progress-meta">
+          <span><b id="pct">0%</b> 完成</span>
+          <span>满募 <b id="hardCap">20</b> BNB</span>
+        </div>
+      </div>
+
+      <label class="field-label">买入份额</label>
+      <div class="stepper">
+        <button type="button" id="minus" aria-label="减少">−</button>
+        <input id="shares" inputmode="numeric" value="1" />
+        <button type="button" id="plus" aria-label="增加">+</button>
+      </div>
+      <div class="quick">
+        <button data-q="1">1 份</button><button data-q="5">5 份</button><button data-q="10">买满 10 份</button>
+      </div>
+
+      <dl class="quote">
+        <div><dt>每份</dt><dd><span id="pricePer">0.01</span> BNB · 250,000 枚</dd></div>
+        <div><dt>应付</dt><dd class="strong"><span id="payable">0.01</span> BNB</dd></div>
+        <div><dt>到账</dt><dd><span id="receivable">250,000</span> 枚 <span id="sym2">WAKE</span></dd></div>
+      </dl>
+
+      <button class="btn btn-primary btn-block" id="actionBtn" disabled>连接钱包</button>
+      <button class="btn btn-ghost btn-block hide" id="claimBtn">领取份额</button>
+      <button class="btn btn-ghost btn-block hide" id="refundBtn">全额退款</button>
+
+      <div class="mine hide" id="mineBox">
+        <div><span>我的份额</span><b id="myShares">0</b></div>
+        <div><span>我的额度</span><b id="myQuota">10</b></div>
+      </div>
+
+      <p class="ref-line" id="refLine"></p>
+      <p class="fine center">付款只进入销售合约，<b>没有任何提款函数</b>。BNB 只有两条出口：进池，或退回给你。</p>
+    </aside>
+  </div>
+</section>
+
+<!-- ============================= LETTER ============================= -->
+<section class="section" id="letter">
+  <div class="wrap narrow">
+    <span class="sec-tag">OPEN LETTER · 给还在的人</span>
+    <h2 class="sec-title">市场安静了，<br class="m" />但我们还没睡。</h2>
+    <div class="letter">
+      <p>热度退潮的时候，最先安静的是声音，不是人。</p>
+      <p>这一轮里，很多人买过 ID、追过新盘、做过任务、撑过场子。钱包记录都在链上，没人能删掉。现在盘面冷了，群里话少了，好像这个方向就这样了 —— 但我们看了看自己的持仓，决定不装睡。</p>
+      <p><b>WAKE 是社区自己发起的一次闹钟。</b>规则不靠嘴说，全部写进合约：20 BNB 硬顶，2000 份，每钱包最多 10 份 —— 也就是说，这件事最多只能有 200 个钱包参与。卖满，合约自己把 80% 的 BNB 和我们 40% 的代币做成 PancakeSwap 流动性，LP 直接打进黑洞地址，谁都拿不回来；没卖满，24 小时一到，任何人可以开启退款，你付多少，一分不少退多少。</p>
+      <p>项目方在合约里<b>没有提款入口</b>。这句话不是承诺，是代码 —— 你可以自己去 BscScan 读，读完再决定要不要上车。</p>
+      <p>我们不想再等一个官方来救场。这一次，自己定闹钟，自己喊醒自己。</p>
+      <p class="sign">— WAKE 社区发起人 · <span class="gold">◆</span> 菱形为力量，社区为底色</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= RULES ============================= -->
+<section class="section" id="rules">
+  <div class="wrap">
+    <span class="sec-tag">TOKENOMICS</span>
+    <h2 class="sec-title">数字先摆出来，<br class="m" />再谈故事。</h2>
+
+    <div class="grid4">
+      <div class="card"><div class="num">50%</div><h3>5 亿枚 · 预售</h3><p>2000 份 × 250,000 枚，每份 0.01 BNB。每钱包上限 10 份。</p></div>
+      <div class="card"><div class="num">40%</div><h3>4 亿枚 · 流动性</h3><p>卖满自动与 80% 募资（16 BNB）组成 PancakeSwap 池，LP 打进 <code>0x…dEaD</code> 永久锁死。</p></div>
+      <div class="card"><div class="num">10%</div><h3>1 亿枚 · 营销储备</h3><p>上线即转入营销钱包，用于 CEX、做市、回购与社区活动，地址公开可查。</p></div>
+      <div class="card"><div class="num">3% / 3%</div><h3>买卖税</h3><p>买入 3%、卖出 3%，<b>税率写死为常量，没人能改</b>；税以代币形式直接进营销钱包，不 swap、不碰 LP。</p></div>
+    </div>
+
+    <div class="split">
+      <div class="card pad">
+        <h3>卖满之后，钱去哪了？</h3>
+        <ul class="list">
+          <li><b>80%（16 BNB）</b> → 与 4 亿枚代币组成 PancakeSwap 流动性，LP 转进黑洞地址，永久锁死。</li>
+          <li><b>20%（4 BNB）</b> → 营销钱包，结算给项目方，用于后续运营。</li>
+          <li><b>开盘价 = 预售价</b> → 16 BNB / 4 亿枚 = 0.01 BNB / 25 万枚，预售与开盘<b>零溢价</b>，没有人靠开盘插针。</li>
+        </ul>
+      </div>
+      <div class="card pad">
+        <h3>没卖满呢？</h3>
+        <ul class="list">
+          <li>24 小时结束仍未售满，合约自动锁定为<b>失败状态</b>，任何人都能调用一次 <code>openRefund()</code> 开启退款。</li>
+          <li>买家自己点「全额退款」，<b>1:1 拿回全部 BNB</b>，不用求人、不用等审批、不用联系客服。</li>
+          <li>合约里没有项目方提款函数，钱从来没离开过销售合约。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid3 mt">
+      <div class="mini"><span>◆</span><b>200 个钱包封顶</b><p>2000 份 ÷ 每钱包 10 份。稀缺不是话术，是除法。</p></div>
+      <div class="mini"><span>◆</span><b>24 小时窗口</b><p>开售即倒计时，过点不再接受任何买入。</p></div>
+      <div class="mini"><span>◆</span><b>零增发</b><p>10 亿枚总量写死在合约，永不可增发。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= CLEAN ============================= -->
+<section class="section" id="clean">
+  <div class="wrap">
+    <span class="sec-tag">CLEAN CONTRACT</span>
+    <h2 class="sec-title">合约干净清单。<br class="m" /><span class="muted">一条一条，自己核对。</span></h2>
+
+    <div class="clean-grid">
+      <ul class="check">
+        <li>无 owner、无 admin、无多签权限</li>
+        <li>无代理、无 upgrade、无 delegatecall</li>
+        <li>无增发函数，总量 1,000,000,000 常量</li>
+        <li>无暂停开关、无交易限制</li>
+        <li>无黑名单、无地址冻结</li>
+        <li>税率写死常量，无 setTax 函数</li>
+      </ul>
+      <ul class="check">
+        <li>销售合约无 withdraw / emergencyWithdraw</li>
+        <li>买家 BNB 只有「进池」或「退款」两条出口</li>
+        <li>LP 代币买满后直接转进 <code>0x…dEaD</code></li>
+        <li>未售满无法开池，只能退款</li>
+        <li>领取份额不打税，全额到账</li>
+        <li>源码已验证，可在 BscScan / Sourcify 复核</li>
+      </ul>
+    </div>
+
+    <div class="addr-grid">
+      <div class="addr-card">
+        <span class="k">代币合约 · TOKEN</span>
+        <code id="tokenAddr">待部署</code>
+        <div class="addr-actions">
+          <button class="btn btn-mini" data-copy="tokenAddr">复制</button>
+          <a class="btn btn-mini" id="tokenScan" href="#" target="_blank" rel="noopener">BscScan ↗</a>
+        </div>
+      </div>
+      <div class="addr-card">
+        <span class="k">销售合约 · MINT SALE</span>
+        <code id="saleAddr">待部署</code>
+        <div class="addr-actions">
+          <button class="btn btn-mini" data-copy="saleAddr">复制</button>
+          <a class="btn btn-mini" id="saleScan" href="#" target="_blank" rel="noopener">BscScan ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= EVENT ============================= -->
+<section class="section" id="event">
+  <div class="wrap">
+    <span class="sec-tag">LAUNCH CAMPAIGN · 开售活动</span>
+    <h2 class="sec-title">营销份额不要了，<br class="m" />改成回购和空投。</h2>
+    <p class="sec-sub">项目方不预挖、不锁仓、不做团队池。1 亿枚营销份额在上线时全部销毁（链上可查），
+      活动奖励改由<b>回购</b>提供：售满后从募资里拿出 10%（2 BNB）在池子里回购 WAKE，
+      按下面的规则发到买家钱包 —— 不用领取，直接到账，谁都能复算。</p>
+
+    <div class="grid4">
+      <div class="card"><div class="num">10%</div><h3>2 BNB · 回购奖励池</h3>
+        <p>售满后自动用于回购 WAKE，封顶 2,000 万枚，全部分给买家；多出的部分按份数加权随机空投。</p></div>
+      <div class="card"><div class="num">+20%</div><h3>早鸟加成</h3>
+        <p>前 100 个买满 10 份的钱包，领取时额外多送 20%（多 500,000 枚）。按链上买满顺序，先到先得。</p></div>
+      <div class="card"><div class="num">4 轮</div><h3>里程碑抽奖</h3>
+        <p>进度 25% / 50% / 75% / 100% 各抽一轮，每轮 1,000,000 枚抽 10 人，每份算 1 张票。</p></div>
+      <div class="card"><div class="num">25,000</div><h3>推荐奖励 ×2</h3>
+        <p>通过邀请链接买入，推荐人与被推荐人<b>各得 25,000 枚</b>。推荐人须至少买入 1 份，最多计 20 人。</p></div>
+    </div>
+
+    <div class="event-rules">
+      <div><span class="k">抽奖种子</span><p>取每个里程碑达成后<b>第 10 个区块</b>的哈希作为随机种子，算法提前公示、链上可复算。没有任何人能操纵结果。</p></div>
+      <div><span class="k">发放方式</span><p>开池后 <b>24 小时内</b>自动发到买入钱包，不需要点击领取、不需要填表、不需要私聊任何人。</p></div>
+      <div><span class="k">失败即取消</span><p>如 24 小时未售满、全员退款，活动整体取消，<b>一枚不发</b>，你也不会为活动多付一分钱。</p></div>
+      <div><span class="k">口径统一</span><p>所有奖励以<b>链上买入记录</b>结算，不看截图、不看留言、不看谁喊得响。规则写在页面，结果写在区块。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= INVITE ============================= -->
+<section class="section" id="invite">
+  <div class="wrap narrow center">
+    <span class="sec-tag">REFERRAL</span>
+    <h2 class="sec-title">带一个人来，<br class="m" />链上留一笔。</h2>
+    <p class="sec-sub">邀请关系通过链接带入，并在买入交易里写进链上事件，永久可查。奖励以回购/空投形式在开池后统一结算，规则公开、按链上记录发放。</p>
+
+    <div class="invite-box">
+      <div class="invite-row">
+        <input id="myAddrInput" placeholder="输入钱包地址 0x…" />
+        <button class="btn btn-primary" id="genRef">生成链接</button>
+      </div>
+      <div class="invite-out">
+        <code id="refOut">连接钱包后自动生成</code>
+        <button class="btn btn-mini" data-copy="refOut">复制</button>
+      </div>
+      <p class="fine" id="refWho"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= FAQ ============================= -->
+<section class="section" id="faq">
+  <div class="wrap narrow">
+    <span class="sec-tag">FAQ</span>
+    <h2 class="sec-title">上车前会问的。</h2>
+    <details><summary>币什么时候到账？</summary><p>买入只是记账。卖满后合约自动开池，然后点「领取份额」，250,000 枚 / 份 直接进你的钱包，不打税。</p></details>
+    <details><summary>开池价怎么算？</summary><p>16 BNB 配 4 亿枚 = 0.01 BNB / 25 万枚，与预售完全同价。没有任何团队份额在开盘砸盘。</p></details>
+    <details><summary>卖不满怎么办？</summary><p>24 小时到期后，任何人可开启退款模式，你在页面上点「全额退款」，合约按 0.01 BNB / 份 原路退回，1:1。</p></details>
+    <details><summary>项目方能拿走我的钱吗？</summary><p>销售合约没有任何提款函数。卖满时 20% 结算给营销钱包是写在合约里的规则，剩下 80% 只能进 LP；没卖满则全部留在合约里等买家退。</p></details>
+    <details><summary>税率能不能被偷偷调高？</summary><p>买入 3% / 卖出 3% 是 <code>constant</code> 常量，合约里不存在任何修改税率的函数。</p></details>
+    <details><summary>为什么每钱包只能 10 份？</summary><p>为了让筹码分散，防止单地址扫货。这也意味着这件事最多只有 200 个钱包能参与。</p></details>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="brand"><span class="mark">◆</span><span class="brand-txt"><b>WAKE</b><i>BNB SMART CHAIN</i></span></div>
+      <div class="foot-links">
+        <a id="footSale" href="#" target="_blank" rel="noopener">销售合约</a>
+        <a id="footToken" href="#" target="_blank" rel="noopener">代币合约</a>
+        <a href="https://pancakeswap.finance" target="_blank" rel="noopener">PancakeSwap</a>
+      </div>
+    </div>
+    <p class="disclaimer">
+      免责声明：WAKE 为 BNB Chain 上的社区自发项目，与 Binance、CZ 本人及任何官方机构无隶属、合作或背书关系，亦未获得其推荐、授权或认可。
+      本页所有内容不构成投资建议。加密资产价格波动剧烈，参与前请自行判断风险，并自行核对链上合约。
+    </p>
+    <p class="copy">© <span id="year"></span> WAKE · 菱形为力量，社区为底色</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
