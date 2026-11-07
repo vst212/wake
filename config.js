@@ -1,11 +1,7 @@
-/* ============================================================
-   WAKE · site config
-   部署完合约后运行 `node scripts/deploy.js`，这个文件会被自动重写。
-   （本地演示用 scripts/config.demo.local.js 覆盖本文件）
-   ============================================================ */
-window.WAKE_CONFIG = {
-  brand: "WAKE",
-  symbol: "WAKE",
+/* 由 scripts/deploy.js 自动生成 · 2026-11-07T15:26:29.458Z */
+window.LASTCALL_CONFIG = {
+  brand: "LASTCALL",
+  symbol: "LASTCALL",
   chainId: 56,
   chainName: "BNB Smart Chain",
   rpc: [
@@ -15,14 +11,12 @@ window.WAKE_CONFIG = {
     "https://bsc.publicnode.com"
   ],
   explorer: "https://bscscan.com",
-  // ---- 部署后自动填充 ----
-  token: "",
-  sale: "",
+  token: "0x9D833651991569a1b018b51910dE9ce7aB8A4300",
+  sale: "0x94Fd1C322290Ae1D973135Da427F2a59F217E8E4",
   pair: "",
-  marketing: "",
-  startTime: 0,
-  endTime: 0,
-  // ---- 兜底展示值（链上读不到时才用）----
+  marketing: "0x503b1b4E653073288894451B50c0771B2bAc3405",
+  startTime: 1794068778,
+  endTime: 1794155178,
   pricePerShare: "0.01",
   tokensPerShare: "250000",
   totalShares: 2000,

@@ -1,11 +1,11 @@
 /* ============================================================
-   WAKE · dapp
+   LASTCALL · dapp
    纯静态、无构建、无后端。所有状态直读 BSC 合约。
    ============================================================ */
 (function () {
   "use strict";
 
-  var CFG = window.WAKE_CONFIG || {};
+  var CFG = window.LASTCALL_CONFIG || {};
   var ZERO = "0x0000000000000000000000000000000000000000";
   // ?demo=1 → 纯前端演示数据（不做任何链上读写），用于路演 / 截图 / 社群预热
   var DEMO = /[?&]demo=1(&|$)/.test(location.search);
@@ -131,7 +131,7 @@
     $("actionBtn").disabled = true;
     $("tokenAddr").textContent = CFG.token || "部署后自动填充";
     $("saleAddr").textContent = CFG.sale || "部署后自动填充";
-    document.title = (CFG.brand || "WAKE") + " · 20 BNB 硬顶 · 卖满自动开池";
+    document.title = (CFG.brand || "LASTCALL") + " · 20 BNB 硬顶 · 卖满自动开池";
   }
 
   // ---------------------------------------------------------------- render
@@ -346,6 +346,12 @@
     if (!addr) return;
     var url = location.origin + location.pathname + "?ref=" + addr;
     $("refOut").textContent = url;
+    var share = $("shareX");
+    if (share) {
+      share.href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(
+        "关门前最后一轮 · $" + (CFG.symbol || "LASTCALL") + " ｜ 20 BNB 硬顶，只有 200 个钱包能上车 · 卖满自动开池、LP 锁死黑洞，未满 24h 全额退款"
+      ) + "&url=" + encodeURIComponent(url);
+    }
   }
 
   function captureRef() {
@@ -354,6 +360,7 @@
       try {
         state.ref = ethers.getAddress(m[1]);
         $("refWho").innerHTML = "你正在通过 <b>" + short(state.ref) + "</b> 的邀请参与，邀请关系会写进买入交易。";
+        $("refLine").innerHTML = "通过 <b>" + short(state.ref) + "</b> 的邀请链接参与 · 推荐奖励按链上记录结算";
       } catch (e) { state.ref = null; }
     }
   }
@@ -440,17 +447,19 @@
 
   function bakeStatic() {
     $("year").textContent = new Date().getFullYear();
-    $("brandSym").textContent = CFG.symbol || "WAKE";
-    $("sym2").textContent = CFG.symbol || "WAKE";
+    $("brandSym").textContent = CFG.symbol || "LASTCALL";
+    $("sym2").textContent = CFG.symbol || "LASTCALL";
     if (CFG.token) {
       $("tokenAddr").textContent = CFG.token;
       $("tokenScan").href = (CFG.explorer || "https://bscscan.com") + "/address/" + CFG.token;
       $("footToken").href = $("tokenScan").href;
+      if ($("tokenSrc")) $("tokenSrc").href = "https://sourcify.dev/#/lookup/" + CFG.token;
     }
     if (CFG.sale) {
       $("saleAddr").textContent = CFG.sale;
       $("saleScan").href = (CFG.explorer || "https://bscscan.com") + "/address/" + CFG.sale;
       $("footSale").href = $("saleScan").href;
+      if ($("saleSrc")) $("saleSrc").href = "https://sourcify.dev/#/lookup/" + CFG.sale;
     }
   }
 
