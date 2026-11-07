@@ -275,3 +275,9 @@ details p{margin-top:.8rem;font-size:.88rem;color:var(--txt-2);line-height:1.75}
   .buy-card{padding:1.15rem}
   .hero{padding-top:2rem}
 }
+
+/* ------------------------------- demo banner */
+.demo-bar{position:relative;z-index:60;text-align:center;
+  font-size:.76rem;color:#0a0a0a;background:linear-gradient(90deg,#FFD666,#F0B90B);
+  padding:.42rem .8rem;font-weight:600;letter-spacing:.01em;box-shadow:0 6px 24px -12px #000}
+.demo-bar code{background:rgba(0,0,0,.14);border-color:rgba(0,0,0,.18);color:#0a0a0a}

@@ -7,6 +7,8 @@
 
   var CFG = window.WAKE_CONFIG || {};
   var ZERO = "0x0000000000000000000000000000000000000000";
+  // ?demo=1 → 纯前端演示数据（不做任何链上读写），用于路演 / 截图 / 社群预热
+  var DEMO = /[?&]demo=1(&|$)/.test(location.search);
 
   var SALE_ABI = [
     "function info() view returns (uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,bool,bool,address)",
@@ -66,6 +68,7 @@
 
   // ---------------------------------------------------------------- read
   async function readChain() {
+    if (DEMO) { renderDemo(); return; }
     if (!deployed()) { renderStatic(); return; }
     var p = getProvider();
     if (!p) return;
@@ -84,6 +87,32 @@
     } catch (e) {
       console.warn("chain read failed", e);
       renderStatic();
+    }
+  }
+
+  // 演示模式：把示例数据喂给同一套 render()，走完全一致的 UI 路径
+  function renderDemo() {
+    var now = Math.floor(Date.now() / 1000);
+    state.info = {
+      sharesSold: 680, totalShares: 2000,
+      raised: ethers.parseEther("6.8"), hardCap: ethers.parseEther("20"),
+      price: ethers.parseEther("0.01"), tokensPerShare: ethers.parseEther("250000"),
+      maxPerWallet: 10, start: now - 6 * 3600, end: now + 10 * 3600,
+      launched: false, refundOpen: false, pair: ZERO, demo: true
+    };
+    render();
+    $("cardStatus").textContent = "演示数据 · 非链上";
+    $("cardStatus").className = "pill warn";
+    $("statusText").textContent = "演示";
+    $("actionBtn").textContent = "演示预览 · 合约部署后开放买入";
+    $("actionBtn").disabled = true;
+    $("actionBtn").dataset.mode = "demo";
+    if (!$("demoBar")) {
+      var bar = document.createElement("div");
+      bar.id = "demoBar";
+      bar.className = "demo-bar";
+      bar.innerHTML = '演示预览 · 页面数字为示例（680 / 2000 份），不读取链上数据；真实上线后打开不带 <code>?demo=1</code> 的地址即为实盘。';
+      document.body.insertBefore(bar, document.body.firstChild);
     }
   }
 
